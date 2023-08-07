@@ -50,15 +50,12 @@ sudo pacman -S wayland wlroots
 # HYPRLAND
 echo "Installing Desktop Environment..."
 yay -S hyprland-git waybar-hyprland-git swww-git
-sudo pacman -S wofi # couldn't find on aur
-sudo pacman -S alacritty
-# maybe add eww-wayland-git
+sudo pacman -S alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist
 
 
 # AUDIO
 echo "Installing Audio Server and utilities..."
-yay -S pipewire-git  pipewire-alsa-git pipewire-jack-git pipewire-pulse-git
-yay -S wireplumber-git qjackctl-git pavucontrol-git
+yay -S pipewire-git  pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git qjackctl-git pavucontrol-git
 
 
 # FONTS
@@ -68,21 +65,31 @@ yay -S ttf-twemoji ttf-jetbrains-mono-nerd
 
 # COLOR PICKER
 echo "Installing color picker..."
-sudo pacman -S hyprpicker wl-copy
+sudo pacman -S hyprpicker
 
 
 # ADDITIONALS
 echo "Installing additional software..."
 sudo pacman -S thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer # thunar
 sudo pacman -S viewnior vlc # media viewers
-sudo pacman -S ranger vim neovim # cli
+sudo pacman -S ranger htop alsa-utils vim neovim # cli
 sudo pacman -S firefox ark gparted keepassxc qbittorrent # other
 
-read -p "Do you want to install Joplin and Anki? [y/n] " -n 1 -r
+read -p "Do you want to install Joplin, Anki and Webcord? [y/n] " -n 1 -r
 echo " "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  echo "Installing Joplin and Anki..."
-  yay -S joplin-desktop anki
+  echo "Installing Joplin, Anki and Webcord..."
+  yay -S joplin-desktop anki webcord
+fi
+
+
+# DEVELOPMENT
+read -p "Do you want to install development tools? [y/n] " -n 1 -r
+echo " "
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  echo "Installing development tools..."
+  yay -S vscodium-bin
+  sudo pacman -S virtualbox
 fi
 
 
@@ -93,6 +100,7 @@ fi
 # LIBRE OFFICE
 # echo "Installing libre office"
 # sudo pacman -S libreoffice
+
 
 # DOT FILES
 echo "Copying dotfiles..."
