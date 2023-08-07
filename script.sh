@@ -79,6 +79,7 @@ sudo pacman -S firefox ark gparted keepassxc qbittorrent # other
 
 # DOT FILES
 echo "Copying dotfiles..."
+cp -r ./alacritty ~/.config/alacritty
 cp -r ./eww ~/.config/eww
 cp -r ./hypr ~/.config/hypr
 cp -r ./waybar ~/.config/waybar
