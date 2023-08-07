@@ -19,7 +19,7 @@ Script to install a fully configured hyprland environment on top of arch minimal
 | Sound        | Pipewire
 | | |
 | Terminal        | Alacritty
-| File Explorer   | Ranger, Thunar, Dolphin
+| File Explorer   | Ranger, Thunar
 | Browser         | Firefox
 | Video Player    | Vlc
 | Archive Manager | Ark

@@ -62,8 +62,11 @@ sudo pacman -S hyprpicker wl-copy
 
 # ADDITIONALS
 echo "Installing additional software..."
-sudo pacman -S ranger thunar dolphin viewnior vlc firefox vim neovim ark gparted keepassxc
-yay -S joplin-desktop anki
+sudo pacman -S thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer # thunar
+sudo pacman -S viewnior vlc # media viewers
+sudo pacman -S ranger vim neovim # cli
+sudo pacman -S firefox ark gparted keepassxc qbittorrent # other
+# yay -S joplin-desktop anki
 
 
 # STEAM

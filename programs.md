@@ -15,7 +15,7 @@
 ## Environment Software
 
 * terminal:      alacritty
-* file explorer: ranger thunar?/dolphin
+* file explorer: ranger thunar
 * browser:       firefox
 
 * text editor:   vim neovim
