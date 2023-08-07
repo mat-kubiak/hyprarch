@@ -1,7 +1,17 @@
 #!/bin/bash
 
+instl_pacman() {
+  sudo pacman --noconfirm --logfile ./log -S $@
+}
+
+instl_yay() {
+  yay --answerclean None --answerdiff None -S $@
+}
+
+
 echo "Hello! This script will install the whole hyprland ecosystem along with configuration."
-echo "If you aren't sure what software it will install and whether you want it, please consult with the README"
+echo "If something goes wrong, look for the log file in the script's directory."
+echo "If you aren't sure what software the script will install and whether you want it, please consult with the README"
 
 read -p "Now, are you sure you want to continue? [y/n] " -n 1 -r
 echo " "
@@ -29,7 +39,7 @@ sudo pacman -Syu
 
 # YAY
 echo "Installing Yay..."
-sudo pacman -S git base-devel
+instl_pacman git base-devel
 git clone https://aur.archlinux.org/yay.git
 cd yay
 makepkg -si
@@ -37,49 +47,58 @@ cd ..
 sudo rm -rf yay
 
 
+# WAYLAND & XORG
+echo "Installing Wayland with Xorg compatibility..."
+instl_pacman wayland wlroots xorg-server xorg-xwayland
+
+
 # DISPLAY MANAGER
 echo "Installing Display Manager..."
-yay -S sddm-git
-
-
-# WAYLAND
-echo "Installing Wayland..."
-sudo pacman -S wayland wlroots
+instl_pacman sddm
 
 
 # HYPRLAND
 echo "Installing Desktop Environment..."
-yay -S hyprland-git waybar-hyprland-git swww-git
-sudo pacman -S alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist
+read -p "Do you have an NVIDIA card? [y/n] " -n 1 -r
+hypr_pack=hyprland-git
+echo " "
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  hypr_pack=hyprland-nvidia-git
+fi
+
+instl_yay $hypr_pack waybar-hyprland-git swww-git
+instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist
 
 
 # AUDIO
 echo "Installing Audio Server and utilities..."
-yay -S pipewire-git  pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git qjackctl-git pavucontrol-git
+instl_yay pipewire-git pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git
+instl_pacman qjackctl pavucontrol
 
 
 # FONTS
 echo "Installing fonts and emoji..."
-yay -S ttf-twemoji ttf-jetbrains-mono-nerd
+instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
 
 
 # COLOR PICKER
 echo "Installing color picker..."
-sudo pacman -S hyprpicker
+instl_pacman hyprpicker
 
 
 # ADDITIONALS
 echo "Installing additional software..."
-sudo pacman -S thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer # thunar
-sudo pacman -S viewnior vlc # media viewers
-sudo pacman -S ranger htop alsa-utils vim neovim # cli
-sudo pacman -S firefox ark gparted keepassxc qbittorrent # other
+thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer"
+media_pack="viewnior vlc"
+cli_pack="ranger htop alsa-utils vim neovim"
+gui_pack="firefox ark gparted keepassxc qbittorrent"
+instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 read -p "Do you want to install Joplin, Anki and Webcord? [y/n] " -n 1 -r
 echo " "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Installing Joplin, Anki and Webcord..."
-  yay -S joplin-desktop anki webcord
+  instl_yay joplin-desktop anki webcord
 fi
 
 
@@ -88,8 +107,8 @@ read -p "Do you want to install development tools? [y/n] " -n 1 -r
 echo " "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   echo "Installing development tools..."
-  yay -S vscodium-bin
-  sudo pacman -S virtualbox
+  instl_yay vscodium-bin
+  instl_pacman virtualbox
 fi
 
 
@@ -99,7 +118,7 @@ fi
 
 # LIBRE OFFICE
 # echo "Installing libre office"
-# sudo pacman -S libreoffice
+# instl_pacman libreoffice
 
 
 # DOT FILES
