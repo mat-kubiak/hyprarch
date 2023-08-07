@@ -2,7 +2,13 @@
 
 echo "Hello! This script will install the whole hyprland ecosystem along with configuration."
 echo "If you aren't sure what software it will install and whether you want it, please consult with the README"
-# echo "Now, are you sure you want to continue? [y/n]"
+
+read -p "Now, are you sure you want to continue? [y/n] " -n 1 -r
+echo " "
+if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+  echo "Script canceled."
+  [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1 # handle exits from shell or function but don't exit interactive shell
+fi
 
 
 # INTERNET CONNECTION
@@ -57,7 +63,7 @@ yay -S wireplumber-git qjackctl-git pavucontrol-git
 
 # FONTS
 echo "Installing fonts and emoji..."
-yay -S ttf-twemoji
+yay -S ttf-twemoji ttf-jetbrains-mono-nerd
 
 
 # COLOR PICKER
@@ -71,7 +77,13 @@ sudo pacman -S thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer # th
 sudo pacman -S viewnior vlc # media viewers
 sudo pacman -S ranger vim neovim # cli
 sudo pacman -S firefox ark gparted keepassxc qbittorrent # other
-# yay -S joplin-desktop anki
+
+read -p "Do you want to install Joplin and Anki? [y/n] " -n 1 -r
+echo " "
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  echo "Installing Joplin and Anki..."
+  yay -S joplin-desktop anki
+fi
 
 
 # STEAM
@@ -84,8 +96,8 @@ sudo pacman -S firefox ark gparted keepassxc qbittorrent # other
 
 # DOT FILES
 echo "Copying dotfiles..."
-cp -r ./alacritty ~/.config/alacritty
-cp -r ./eww ~/.config/eww
-cp -r ./hypr ~/.config/hypr
-cp -r ./waybar ~/.config/waybar
+cp -r ./config/alacritty ~/.config/alacritty
+cp -r ./config/eww ~/.config/eww
+cp -r ./config/hypr ~/.config/hypr
+cp -r ./config/waybar ~/.config/waybar
 sudo cp -r ./wallpapers /usr/share/wallpapers
