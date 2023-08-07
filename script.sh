@@ -36,6 +36,11 @@ echo "Installing Display Manager..."
 yay -S sddm-git
 
 
+# WAYLAND
+echo "Installing Wayland..."
+sudo pacman -S wayland wlroots
+
+
 # HYPRLAND
 echo "Installing Desktop Environment..."
 yay -S hyprland-git waybar-hyprland-git swww-git
