@@ -60,7 +60,7 @@ instl_pacman sddm
 # HYPRLAND
 echo "Installing Desktop Environment..."
 read -p "Do you have an NVIDIA card? [y/n] " -n 1 -r
-hypr_pack=hyprland-git
+hypr_pack=hyprland
 echo " "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   hypr_pack=hyprland-nvidia-git
