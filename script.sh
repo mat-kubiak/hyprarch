@@ -75,6 +75,7 @@ instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland c
 echo "Installing Audio Server and utilities..."
 instl_yay pipewire-git pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git
 instl_pacman qjackctl pavucontrol
+systemctl enable --user pipewire.service pipewire-pulse.service
 
 
 # FONTS
