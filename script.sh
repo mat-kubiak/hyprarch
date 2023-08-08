@@ -73,7 +73,7 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   hypr_pack=hyprland-nvidia-git
 fi
 
-instl_yay $hypr_pack waybar-hyprland-git swww-git
+instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
 instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
 
 
