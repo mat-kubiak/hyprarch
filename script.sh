@@ -55,6 +55,7 @@ instl_pacman wayland wlroots xorg-server xorg-xwayland
 # DISPLAY MANAGER
 echo "Installing Display Manager..."
 instl_pacman sddm
+sudo systemctl enable sddm.service
 
 
 # HYPRLAND
