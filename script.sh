@@ -8,7 +8,18 @@ instl_yay() {
   yay --answerclean None --answerdiff None -S $@
 }
 
+echo "Testing internet connection..."
+curl -D- -o /dev/null -s http://www.google.com > /dev/null
+if [[ $? == 0 ]]; then
+  echo "Internet connected."
+else
+  echo "Internet not connected! Please try again!"
+  exit 1
+fi
 
+
+# MENU
+echo " "
 echo "Hello! This script will install the whole hyprland ecosystem along with configuration."
 echo "If something goes wrong, look for the log file in the script's directory."
 echo "If you aren't sure what software the script will install and whether you want it, please consult with the README"
@@ -20,15 +31,10 @@ if [[ ! $REPLY =~ ^[Yy]$ ]]; then
   [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
-
-# INTERNET CONNECTION
-echo "Testing internet connection..."
-curl -D- -o /dev/null -s http://www.google.com > /dev/null
-if [[ $? == 0 ]]; then
-  echo "Internet connected."
-else
-  echo "Internet not connected! Please try again!"
-  exit 1
+read -p "Do you want to configure the script and additional packages? [y/n] " -n 1 -r
+echo " "
+if [[ $REPLY =~ ^[Yy]$ ]]; then
+  nano ./config.sh
 fi
 
 
@@ -47,7 +53,7 @@ cd ..
 sudo rm -rf yay
 
 
-# WAYLAND & XORG
+# GRAPHICAL SERVER
 echo "Installing Wayland with Xorg compatibility..."
 instl_pacman wayland wlroots xorg-server xorg-xwayland
 
@@ -90,6 +96,7 @@ media_pack="viewnior vlc"
 cli_pack="ranger htop alsa-utils vim neovim"
 gui_pack="firefox ark gparted"
 instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
+bash ./config.sh
 
 
 # DOT FILES
@@ -99,12 +106,3 @@ cp -r ./config/eww ~/.config/eww
 cp -r ./config/hypr ~/.config/hypr
 cp -r ./config/waybar ~/.config/waybar
 sudo cp -r ./wallpapers /usr/share/wallpapers
-
-
-# CONFIG
-read -p "Do you want to install additional software from config.sh? [y/n] " -n 1 -r
-echo " "
-if [[ $REPLY =~ ^[Yy]$ ]]; then
-  nano ./config.sh
-  bash ./config.sh
-fi
