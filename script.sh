@@ -27,6 +27,8 @@ enable_service() {
   fi
 }
 
+
+# OPTIONS
 while getopts 'hd' OPTION; do
   case "$OPTION" in
     h)
@@ -42,6 +44,7 @@ while getopts 'hd' OPTION; do
 done
 
 
+# INTERNET
 if [[ ! $_debug == "yes" ]]; then
   echo "Testing internet connection..."
   curl -D- -o /dev/null -s http://www.google.com > /dev/null
@@ -111,13 +114,11 @@ enable_service sddm.service
 
 # HYPRLAND
 echo "Installing Desktop Environment..."
-read -p "Do you have an NVIDIA card? [y/n] " -n 1 -r
-hypr_pack=hyprland
-echo " "
-if [[ $REPLY =~ ^[Yy]$ ]]; then
+if [[ $nvidia == "yes" ]]; then
   hypr_pack=hyprland-nvidia-git
+else
+  hypr_pack=hyprland
 fi
-
 instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
 instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
 
