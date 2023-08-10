@@ -130,6 +130,14 @@ instl_pacman qjackctl pavucontrol
 enable_service --user pipewire.service pipewire-pulse.service
 
 
+# BLUETOOTH
+if [[ $install_bluetooth_support == "yes" ]]; then
+  echo "Installing Bluetooth support..."
+  instl_pacman bluez bluez-utils blueman
+  enable_service bluetooth.service
+fi
+
+
 # FONTS
 echo "Installing fonts and emoji..."
 instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
