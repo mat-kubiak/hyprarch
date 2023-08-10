@@ -1,20 +1,56 @@
 #!/bin/bash
 
 instl_pacman() {
-  sudo pacman --noconfirm --logfile ./log -S $@
+  if [[ "$_debug" == "yes" ]]; then
+    echo "[PACMAN] Installed $@"
+  else
+    echo "lol"
+    # sudo pacman --noconfirm --logfile ./log -S $@
+  fi
 }
 
 instl_yay() {
-  yay --answerclean None --answerdiff None -S $@
+  if [[ "$_debug" == "yes" ]]; then
+    echo "[YAY] Installed $@"
+  else
+    echo "lol"
+    # yay --answerclean None --answerdiff None -S $@
+  fi
 }
 
-echo "Testing internet connection..."
-curl -D- -o /dev/null -s http://www.google.com > /dev/null
-if [[ $? == 0 ]]; then
-  echo "Internet connected."
-else
-  echo "Internet not connected! Please try again!"
-  exit 1
+enable_service() {
+  if [[ "$_debug" == "yes" ]]; then
+    echo "[SYSTEMCTL] Enabled $@"
+  else
+    echo "lol"
+    # sudo systemctl enable $@
+  fi
+}
+
+while getopts 'hd' OPTION; do
+  case "$OPTION" in
+    h)
+    echo "HyprArch configuration install script"
+    echo " -h - display help page"
+    echo " -d - debug mode, won't install anything"
+    exit 0
+    ;;
+    d)
+    _debug=yes
+    ;;
+  esac
+done
+
+
+if [[ ! $_debug == "yes" ]]; then
+  echo "Testing internet connection..."
+  curl -D- -o /dev/null -s http://www.google.com > /dev/null
+  if [[ $? == 0 ]]; then
+    echo "Internet connected."
+  else
+    echo "Internet not connected! Please try again!"
+    exit 1
+  fi
 fi
 
 
@@ -42,17 +78,24 @@ source <(grep = config.ini)
 
 # SYSTEM UPDATE
 echo "Performing system update..."
-sudo pacman -Syu
-
+if [[ ! $_debug == "yes" ]]; then
+  sudo pacman -Syu
+else
+  echo "[PACMAN] Updated System"
+fi
 
 # YAY
 echo "Installing Yay..."
-instl_pacman git base-devel
-git clone https://aur.archlinux.org/yay.git
-cd yay
-makepkg -si
-cd ..
-sudo rm -rf yay
+if [[ ! $_debug == "yes" ]]; then
+  instl_pacman git base-devel
+  git clone https://aur.archlinux.org/yay.git
+  cd yay
+  makepkg -si
+  cd ..
+  sudo rm -rf yay
+else
+  echo "[DEBUG] Installed Yay"
+fi
 
 
 # GRAPHICAL SERVER
@@ -63,7 +106,7 @@ instl_pacman wayland wlroots xorg-server xorg-xwayland
 # DISPLAY MANAGER
 echo "Installing Display Manager..."
 instl_pacman sddm
-sudo systemctl enable sddm.service
+enable_service sddm.service
 
 
 # HYPRLAND
@@ -83,7 +126,7 @@ instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland c
 echo "Installing Audio Server and utilities..."
 instl_yay pipewire-git pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git
 instl_pacman qjackctl pavucontrol
-systemctl enable --user pipewire.service pipewire-pulse.service
+enable_service --user pipewire.service pipewire-pulse.service
 
 
 # FONTS
@@ -101,9 +144,13 @@ instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 
 # DOT FILES
-echo "Copying dotfiles..."
-cp -r ./config/alacritty ~/.config/alacritty
-cp -r ./config/eww ~/.config/eww
-cp -r ./config/hypr ~/.config/hypr
-cp -r ./config/waybar ~/.config/waybar
-sudo cp -r ./wallpapers /usr/share/wallpapers
+echo "Copying configuration files..."
+if [[ ! $_debug == "yes" ]]; then
+  cp -r ./config/alacritty ~/.config/alacritty
+  cp -r ./config/eww ~/.config/eww
+  cp -r ./config/hypr ~/.config/hypr
+  cp -r ./config/waybar ~/.config/waybar
+  sudo cp -r ./wallpapers /usr/share/wallpapers
+else
+  echo "[DEBUG] Copied Configuration Files"
+fi
