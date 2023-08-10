@@ -34,8 +34,10 @@ fi
 read -p "Do you want to configure the script and additional packages? [y/n] " -n 1 -r
 echo " "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  nano ./config.sh
+  nano ./config.ini
 fi
+
+source <(grep = config.ini)
 
 
 # SYSTEM UPDATE
@@ -96,7 +98,6 @@ media_pack="viewnior vlc"
 cli_pack="ranger htop alsa-utils vim neovim"
 gui_pack="firefox ark gparted"
 instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
-bash ./config.sh
 
 
 # DOT FILES
