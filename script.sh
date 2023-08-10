@@ -158,6 +158,16 @@ gui_pack="firefox ark gparted"
 instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 
+# FROM CONFIG
+echo "Installing additional software from config..."
+if [[ -z "$additional_pacman" ]]; then
+  instl_pacman "$additional_pacman"
+fi
+if [[ -z "$additional_yay" ]]; then
+  instl_yay "$additional_yay"
+fi
+
+
 # DOT FILES
 echo "Copying configuration files..."
 copy_files ./config/alacritty ~/.config/alacritty
