@@ -4,8 +4,7 @@ instl_pacman() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[PACMAN] Installed $@"
   else
-    echo "lol"
-    # sudo pacman --noconfirm --logfile ./log -S $@
+    sudo pacman --noconfirm --logfile ./log -S $@
   fi
 }
 
@@ -13,8 +12,7 @@ instl_yay() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[YAY] Installed $@"
   else
-    echo "lol"
-    # yay --answerclean None --answerdiff None -S $@
+    yay --answerclean None --answerdiff None -S $@
   fi
 }
 
@@ -22,8 +20,16 @@ enable_service() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[SYSTEMCTL] Enabled $@"
   else
-    echo "lol"
-    # sudo systemctl enable $@
+    sudo systemctl enable $@
+  fi
+}
+
+copy_files() {
+  if [[ "$_debug" == "yes" ]]; then
+    echo "[DEBUG] Copied files from $1 to $2"
+  else
+    sudo cp -r "$1" "$2"
+    sudo chmod -R +w "$2"
   fi
 }
 
@@ -154,12 +160,8 @@ instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 # DOT FILES
 echo "Copying configuration files..."
-if [[ ! $_debug == "yes" ]]; then
-  cp -r ./config/alacritty ~/.config/alacritty
-  cp -r ./config/eww ~/.config/eww
-  cp -r ./config/hypr ~/.config/hypr
-  cp -r ./config/waybar ~/.config/waybar
-  sudo cp -r ./wallpapers /usr/share/wallpapers
-else
-  echo "[DEBUG] Copied Configuration Files"
-fi
+copy_files ./config/alacritty ~/.config/alacritty
+copy_files ./config/eww       ~/.config/eww
+copy_files ./config/hypr      ~/.config/hypr
+copy_files ./config/waybar    ~/.config/waybar
+copy_files ./wallpapers       /usr/share/wallpapers
