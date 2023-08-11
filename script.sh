@@ -166,14 +166,6 @@ elif [[ $steam == "yes" ]]; then
   # uncomments the multilib section in /etc/pacman.conf
   sudo sed -zi 's/#\s*\[multilib\]\n#\s*Include = /\[multilib\]\nInclude = /g' /etc/pacman.conf
   sudo pacman -Syu
-
-  if [[ $nvidia == "yes" ]]; then
-    vulkan_driver=lib32-nvidia-utils
-  else
-    vulkan_driver=lib32-amdvlk
-  fi
-  _instl_pacman $vulkan_driver steam
-  _instl_yay proton
 fi
 
 
