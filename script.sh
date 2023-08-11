@@ -158,6 +158,31 @@ gui_pack="firefox ark gparted"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 
+# STEAM
+if [[ $_debug == "yes" ]]; then
+  echo "[DEBUG] Installed Steam"
+elif [[ $steam == "yes" ]]; then
+  echo "Installing Steam..."
+  # uncomments the multilib section in /etc/pacman.conf
+  sudo sed -zi 's/#\s*\[multilib\]\n#\s*Include = /\[multilib\]\nInclude = /g' /etc/pacman.conf
+  sudo pacman -Syu
+
+  if [[ $nvidia == "yes" ]]; then
+    vulkan_driver=lib32-nvidia-utils
+  else
+    vulkan_driver=lib32-amdvlk
+  fi
+  _instl_pacman $vulkan_driver steam
+  _instl_yay proton
+fi
+
+
+# WEBCORD
+if [[ $webcord == "yes" ]]; then
+  _instl_yay webcord
+fi
+
+
 # FROM CONFIG
 echo "Installing additional software from config..."
 if [[ -z "$additional_pacman" ]]; then
