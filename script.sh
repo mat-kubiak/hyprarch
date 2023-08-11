@@ -1,6 +1,6 @@
 #!/bin/bash
 
-instl_pacman() {
+_instl_pacman() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[PACMAN] Installed $@"
   else
@@ -8,7 +8,7 @@ instl_pacman() {
   fi
 }
 
-instl_yay() {
+_instl_yay() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[YAY] Installed $@"
   else
@@ -16,7 +16,7 @@ instl_yay() {
   fi
 }
 
-enable_service() {
+_enable_service() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[SYSTEMCTL] Enabled $@"
   else
@@ -24,7 +24,7 @@ enable_service() {
   fi
 }
 
-copy_files() {
+_copy_files() {
   if [[ "$_debug" == "yes" ]]; then
     echo "[DEBUG] Copied files from $1 to $2"
   else
@@ -96,7 +96,7 @@ fi
 # YAY
 echo "Installing Yay..."
 if [[ ! $_debug == "yes" ]]; then
-  instl_pacman git base-devel
+  _instl_pacman git base-devel
   git clone https://aur.archlinux.org/yay.git
   cd yay
   makepkg -si
@@ -109,13 +109,13 @@ fi
 
 # GRAPHICAL SERVER
 echo "Installing Wayland with Xorg compatibility..."
-instl_pacman wayland wlroots xorg-server xorg-xwayland
+_instl_pacman wayland wlroots xorg-server xorg-xwayland
 
 
 # DISPLAY MANAGER
 echo "Installing Display Manager..."
-instl_pacman sddm
-enable_service sddm.service
+_instl_pacman sddm
+_enable_service sddm.service
 
 
 # HYPRLAND
@@ -125,28 +125,28 @@ if [[ $nvidia == "yes" ]]; then
 else
   hypr_pack=hyprland
 fi
-instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
-instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
+_instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
+_instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
 
 
 # AUDIO
 echo "Installing Audio Server and utilities..."
-instl_yay pipewire-git pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git
-instl_pacman qjackctl pavucontrol
-enable_service --user pipewire.service pipewire-pulse.service
+_instl_yay pipewire-git pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git
+_instl_pacman qjackctl pavucontrol
+_enable_service --user pipewire.service pipewire-pulse.service
 
 
 # BLUETOOTH
 if [[ $install_bluetooth_support == "yes" ]]; then
   echo "Installing Bluetooth support..."
-  instl_pacman bluez bluez-utils blueman
-  enable_service bluetooth.service
+  _instl_pacman bluez bluez-utils blueman
+  _enable_service bluetooth.service
 fi
 
 
 # FONTS
 echo "Installing fonts and emoji..."
-instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
+_instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
 
 
 # ADDITIONALS
@@ -155,23 +155,23 @@ thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer"
 media_pack="viewnior vlc"
 cli_pack="ranger htop alsa-utils vim neovim"
 gui_pack="firefox ark gparted"
-instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
+_instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 
 # FROM CONFIG
 echo "Installing additional software from config..."
 if [[ -z "$additional_pacman" ]]; then
-  instl_pacman "$additional_pacman"
+  _instl_pacman "$additional_pacman"
 fi
 if [[ -z "$additional_yay" ]]; then
-  instl_yay "$additional_yay"
+  _instl_yay "$additional_yay"
 fi
 
 
 # DOT FILES
 echo "Copying configuration files..."
-copy_files ./config/alacritty ~/.config/alacritty
-copy_files ./config/eww       ~/.config/eww
-copy_files ./config/hypr      ~/.config/hypr
-copy_files ./config/waybar    ~/.config/waybar
-copy_files ./wallpapers       /usr/share/wallpapers
+_copy_files ./config/alacritty ~/.config/alacritty
+_copy_files ./config/eww       ~/.config/eww
+_copy_files ./config/hypr      ~/.config/hypr
+_copy_files ./config/waybar    ~/.config/waybar
+_copy_files ./wallpapers       /usr/share/wallpapers
