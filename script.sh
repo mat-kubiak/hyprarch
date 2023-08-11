@@ -24,12 +24,19 @@ _enable_service() {
   fi
 }
 
-_copy_files() {
+_copy_config() {
   if [[ "$_debug" == "yes" ]]; then
-    echo "[DEBUG] Copied files from $1 to $2"
+    echo "[DEBUG] Copied config from folder $1"
+  else
+    cp -r "./config/$1" "~/.config"
+  fi
+}
+
+_copy_sudo() {
+  if [[ "$_debug" == "yes" ]]; then
+    echo "[DEBUG] Sudo-copied folder $1 inside $3"
   else
     sudo cp -r "$1" "$2"
-    sudo chmod -R +w "$2"
   fi
 }
 
@@ -190,8 +197,8 @@ fi
 
 # DOT FILES
 echo "Copying configuration files..."
-_copy_files ./config/alacritty ~/.config/alacritty
-_copy_files ./config/eww       ~/.config/eww
-_copy_files ./config/hypr      ~/.config/hypr
-_copy_files ./config/waybar    ~/.config/waybar
-_copy_files ./wallpapers       /usr/share/wallpapers
+_copy_config alacritty
+_copy_config eww
+_copy_config hypr
+_copy_config waybar
+_copy_sudo ./wallpapers /usr/share
