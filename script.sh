@@ -165,7 +165,10 @@ elif [[ $steam == "yes" ]]; then
   echo "Installing Steam..."
   # uncomments the multilib section in /etc/pacman.conf
   sudo sed -zi 's/#\s*\[multilib\]\n#\s*Include = /\[multilib\]\nInclude = /g' /etc/pacman.conf
-  sudo pacman -Syu
+  _instl_pacman steam
+
+  # for FMOD to work with pipewire
+  ln -s /bin/true pulseaudio
 fi
 
 
