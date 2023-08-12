@@ -158,8 +158,8 @@ _instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
 
 # ADDITIONALS
 echo "Installing additional software..."
-thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer"
-media_pack="viewnior vlc"
+thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-pixbuf-loader"
+media_pack="viewnior gthumb vlc"
 cli_pack="ranger htop alsa-utils vim neovim"
 gui_pack="firefox ark gparted"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
