@@ -195,6 +195,19 @@ if [[ -z "$additional_yay" ]]; then
 fi
 
 
+# GTK THEME
+if [[ $_debug == "yes" ]]; then
+  echo "[DEBUG] Installed the GTK theme"
+else
+  echo "Installing a GTK theme..."
+  mkdir ~/.theme ~/.icons
+  git clone https://github.com/EliverLara/Kripton.git ~/.theme
+  git clone https://github.com/vinceliuice/Colloid-icon-theme ~/.icons
+  git clone https://github.com/ful1e5/XCursor-pro.git ~/.icons
+  _copy_config gtk-3.0
+fi
+
+
 # DOT FILES
 echo "Copying configuration files..."
 _copy_config alacritty
