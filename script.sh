@@ -1,46 +1,5 @@
 #!/bin/bash
 
-_instl_pacman() {
-  if [[ "$_debug" == "yes" ]]; then
-    echo "[PACMAN] Installed $@"
-  else
-    sudo pacman --noconfirm --logfile ./log -S $@
-  fi
-}
-
-_instl_yay() {
-  if [[ "$_debug" == "yes" ]]; then
-    echo "[YAY] Installed $@"
-  else
-    yay --answerclean None --answerdiff None -S $@
-  fi
-}
-
-_enable_service() {
-  if [[ "$_debug" == "yes" ]]; then
-    echo "[SYSTEMCTL] Enabled $@"
-  else
-    sudo systemctl enable $@
-  fi
-}
-
-_copy_config() {
-  if [[ "$_debug" == "yes" ]]; then
-    echo "[DEBUG] Copied config from folder $1"
-  else
-    cp -r "./config/$1" "~/.config"
-  fi
-}
-
-_copy_sudo() {
-  if [[ "$_debug" == "yes" ]]; then
-    echo "[DEBUG] Sudo-copied folder $1 inside $3"
-  else
-    sudo cp -r "$1" "$2"
-  fi
-}
-
-
 # OPTIONS
 while getopts 'hd' OPTION; do
   case "$OPTION" in
@@ -55,6 +14,21 @@ while getopts 'hd' OPTION; do
     ;;
   esac
 done
+
+
+if [[ "$_debug" == "yes" ]]; then
+  _instl_pacman()   { echo "[PACMAN] Installed $@"; }
+  _instl_yay()      { echo "[YAY] Installed $@"; }
+  _enable_service() { echo "[SYSTEMCTL] Enabled $@"; }
+  _copy_config()    { echo "[DEBUG] Copied config from folder $1"; }
+  _copy_sudo()      { echo "[DEBUG] Sudo-copied folder $1 inside $3"; }
+else
+  _instl_pacman()   { sudo pacman --noconfirm --logfile ./log -S $@; }
+  _instl_yay()      { yay --answerclean None --answerdiff None -S $@; }
+  _enable_service() { sudo systemctl enable $@; }
+  _copy_config()    { cp -r "./config/$1" -t "$HOME/.config"; }
+  _copy_sudo()      { sudo cp -r "$1" "$2"; }
+fi
 
 
 # INTERNET
