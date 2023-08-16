@@ -201,10 +201,27 @@ if [[ $_debug == "yes" ]]; then
 else
   echo "Installing a GTK theme..."
   mkdir ~/.theme ~/.icons
+
+  # Global Theme
   git clone https://github.com/EliverLara/Kripton.git ~/.theme
-  git clone https://github.com/vinceliuice/Colloid-icon-theme ~/.icons
-  git clone https://github.com/ful1e5/XCursor-pro.git ~/.icons
+
+  # Icon Theme
+  mkdir temp
+  git clone https://github.com/vinceliuice/Colloid-icon-theme temp/Colloid
+  bash temp/Colloid/install.sh -d ~/.icons
+
+  # Cursor
+  git clone https://github.com/ful1e5/XCursor-pro.git temp/XCursor-Pro
+  _instl_pacman yarn
+  _instl_yay python-clickgen
+  cd temp/XCursor-Pro && yarn build
+  cp -r "themes/XCursor-Pro-Dark" -t "$HOME/.icons"
+  cp -r themes/XCursor-Pro-Light -t "$HOME/.icons"
+  cp -r themes/XCursor-Pro-Red -t "$HOME/.icons"
+  cd ../..
+
   _copy_config gtk-3.0
+  rm -rf temp
 fi
 
 
