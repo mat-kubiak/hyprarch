@@ -17,17 +17,19 @@ done
 
 
 if [[ "$_debug" == "yes" ]]; then
-  _instl_pacman()   { echo "[PACMAN] Installed $@"; }
-  _instl_yay()      { echo "[YAY] Installed $@"; }
-  _enable_service() { echo "[SYSTEMCTL] Enabled $@"; }
-  _copy_config()    { echo "[DEBUG] Copied config from folder $1"; }
-  _copy_sudo()      { echo "[DEBUG] Sudo-copied folder $1 inside $3"; }
+  _instl_pacman()     { echo "[PACMAN] Installed $@"; }
+  _instl_yay()        { echo "[YAY] Installed $@"; }
+  _enable_service()   { echo "[SYSTEMCTL] Enabled $@"; }
+  _copy_config()      { echo "[DEBUG] Copied config from folder $1"; }
+  _copy_sudo()        { echo "[DEBUG] Sudo-copied folder $1 inside $3"; }
+  _grant_executable() { echo "[DEBUG] Granted permission to execute $1"; }
 else
-  _instl_pacman()   { sudo pacman --noconfirm --logfile ./log -S $@; }
-  _instl_yay()      { yay --answerclean None --answerdiff None -S $@; }
-  _enable_service() { sudo systemctl enable $@; }
-  _copy_config()    { cp -r "./config/$1" -t "$HOME/.config"; }
-  _copy_sudo()      { sudo cp -r "$1" "$2"; }
+  _instl_pacman()     { sudo pacman --noconfirm --logfile ./log -S $@; }
+  _instl_yay()        { yay --answerclean None --answerdiff None -S $@; }
+  _enable_service()   { sudo systemctl enable $@; }
+  _copy_config()      { cp -r "./config/$1" -t "$HOME/.config"; }
+  _copy_sudo()        { sudo cp -r "$1" "$2"; }
+  _grant_executable() { chmod +x "$1"; }
 fi
 
 
@@ -204,5 +206,6 @@ echo "Copying configuration files..."
 _copy_config alacritty
 _copy_config eww
 _copy_config hypr
+_grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
 _copy_sudo ./wallpapers /usr/share
