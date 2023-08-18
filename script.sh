@@ -176,15 +176,15 @@ if [[ $_debug == "yes" ]]; then
   echo "[DEBUG] Installed the GTK theme"
 else
   echo "Installing a GTK theme..."
-  mkdir ~/.theme ~/.icons
+  mkdir "$HOME/.theme" "$HOME/.icons"
 
   # Global Theme
-  git clone https://github.com/EliverLara/Kripton.git ~/.theme
+  git clone https://github.com/EliverLara/Kripton.git "$HOME/.theme"
 
   # Icon Theme
   mkdir temp
   git clone https://github.com/vinceliuice/Colloid-icon-theme temp/Colloid
-  bash temp/Colloid/install.sh -d ~/.icons
+  bash temp/Colloid/install.sh -d "$HOME/.icons"
 
   # Cursor
   git clone https://github.com/ful1e5/XCursor-pro.git temp/XCursor-Pro
