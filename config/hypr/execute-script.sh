@@ -4,11 +4,12 @@ _status_path="$HOME/.config/hypr/status.ini"
 _scripts_path="$HOME/.config/hypr/scripts"
 _all_script_names=$(ls "$HOME/.config/hypr/scripts" | grep ".sh" | grep -v "execute.sh" | sed 's/.sh//')
 
-_help_page="Usage: execute-script.sh [OPTIONS] SCRIPT_NAME
+_help_page="Usage: execute-script.sh [OPTIONS] [SCRIPT_NAME]
 Options:
 \t-h - Display help page.
 \t-s - Start, executes scripts without changing their values.
-\t-a - All, execute all scripts. Should be used with -s. Will ignore SCRIPT_NAME.\n"
+\t-a - All, execute all scripts. Should be used with -s. Won't need SCRIPT_NAME.
+\t-r - Reset, resets the status.ini file to default values before executing scripts.\n"
 
 _toggle_status() {
   if [[ "$_status" == "1" ]]; then
@@ -27,6 +28,7 @@ _execute_script() {
 
 _start=0
 _all=0
+_reset=0
 while getopts 'sah' OPTION; do
   case "$OPTION" in
     h)
@@ -39,11 +41,14 @@ while getopts 'sah' OPTION; do
     a)
     _all=1
     ;;
+    r)
+    _reset=1
+    ;;
   esac
 done
 
 
-if [[ ! -e $_status_path ]]; then
+if [[ "$_reset" == "1" ]] || [[ ! -e $_status_path ]]; then
   cp "$_scripts_path/defaults.ini" "$_status_path"
   _start=1
 fi
