@@ -76,6 +76,7 @@ else
   echo "[PACMAN] Updated System"
 fi
 
+
 # YAY
 echo "Installing Yay..."
 if [[ ! $_debug == "yes" ]]; then
@@ -137,7 +138,7 @@ echo "Installing additional software..."
 thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-pixbuf-loader thunar-archive-plugin thunar-media-tags-plugin"
 media_pack="viewnior gthumb vlc"
 cli_pack="ranger htop alsa-utils vim neovim"
-gui_pack="firefox ark gparted"
+gui_pack="firefox ark gparted nwg-look"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 
