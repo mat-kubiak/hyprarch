@@ -1,6 +1,6 @@
 #!/bin/sh
 
-_touchpad_device="elan1200:00-04f3:309f-touchpad"
+_touchpad_device=""
 
 if [[ "$_start" == "0" ]]; then _toggle_status; fi
 
