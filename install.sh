@@ -1,16 +1,30 @@
 #!/bin/bash
 
+_help_page="HyprArch configuration install script.
+\t-h - Display help page.
+\t-d - Debug mode, won't install anything.
+\t-e - Specify the config editor. Either nano (default) or vim.\n"
+
 # OPTIONS
-while getopts 'hd' OPTION; do
+while getopts ':hde:' OPTION; do
   case "$OPTION" in
+    :)
+    printf "[ERROR] Unrecognized parameter.\n"
+    exit 1
+    ;;
     h)
-    echo "HyprArch configuration install script"
-    echo " -h - display help page"
-    echo " -d - debug mode, won't install anything"
+    printf "$_help_page"
     exit 0
     ;;
     d)
     _debug=yes
+    ;;
+    e)
+    _editor="$OPTARG"
+    if [[ ! "$_editor" == @(nano|vim) ]]; then
+      printf "[ERROR] Choose either nano or vim as the editor.\n"
+      exit 1
+    fi
     ;;
   esac
 done
@@ -62,7 +76,12 @@ fi
 read -p "Do you want to configure the script and additional packages? [y/n] " -n 1 -r
 echo " "
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-  nano ./config.ini
+  _instl_pacman "$_editor"
+  if [[ "$_debug" == "yes" ]]; then
+    printf "[DEBUG] Opened config file in $_editor.\n"
+  else
+    eval "$_editor config.ini"
+  fi
 fi
 
 source <(grep = config.ini)
@@ -137,7 +156,7 @@ _instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
 echo "Installing additional software..."
 thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-pixbuf-loader thunar-archive-plugin thunar-media-tags-plugin"
 media_pack="viewnior gthumb vlc"
-cli_pack="ranger htop alsa-utils vim neovim"
+cli_pack="ranger htop alsa-utils"
 gui_pack="firefox ark gparted nwg-look"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
