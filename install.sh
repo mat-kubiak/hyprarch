@@ -1,26 +1,19 @@
 #!/bin/bash
 
-_script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-_temp_dir="$_script_dir/temp"
-_help_page="HyprArch configuration install script.
+readonly _script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+readonly _temp_dir="$_script_dir/temp"
+readonly _help_page="HyprArch configuration install script.
 \t-h - Display help page.
 \t-d - Debug mode, won't install anything.
 \t-e - Specify the config editor. Either nano (default) or vim.\n"
 
-_red=$'\e[1;31m'
-_grn=$'\e[1;32m'
-_yel=$'\e[1;33m'
-_blu=$'\e[1;34m'
-_mag=$'\e[1;35m'
-_cyn=$'\e[1;36m'
-_end=$'\e[0m'
+readonly _wht=$'\e[0m' _cyn=$'\e[1;36m' _grn=$'\e[1;32m' _mag=$'\e[1;35m' _yel=$'\e[1;33m' _red=$'\e[1;31m'  
 
-_print_info()  { printf "%s\n" "${_cyn}[INFO]${_end} $1"; }
-_print_good()  { printf "%s\n" "${_grn}[GOOD]${_end} $1"; }
-_print_debug() { printf "%s\n" "${_mag}[DEBUG]${_end} $1"; }
-_print_warn()  { printf "%s\n" "${_yel}[WARNING]${_end} $1"; }
-_print_error() { printf "%s\n" "${_red}[ERROR]${_end} $1"; }
-
+_print_info()  { printf "%s\n" "${_cyn}[INFO]${_wht} $1"; }
+_print_good()  { printf "%s\n" "${_grn}[GOOD]${_wht} $1"; }
+_print_debug() { printf "%s\n" "${_mag}[DEBUG]${_wht} $1"; }
+_print_warn()  { printf "%s\n" "${_yel}[WARNING]${_wht} $1"; }
+_print_error() { printf "%s\n" "${_red}[ERROR]${_wht} $1"; }
 
 # OPTIONS
 while getopts ':hde:' OPTION; do
