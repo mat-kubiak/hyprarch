@@ -1,5 +1,7 @@
 #!/bin/bash
 
+_script_dir="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
+_temp_dir="$_script_dir/temp"
 _help_page="HyprArch configuration install script.
 \t-h - Display help page.
 \t-d - Debug mode, won't install anything.
@@ -41,7 +43,7 @@ else
   _instl_pacman()     { sudo pacman --noconfirm --logfile ./log -S $@; }
   _instl_yay()        { yay --answerclean None --answerdiff None -S $@; }
   _enable_service()   { sudo systemctl enable $@; }
-  _copy_config()      { cp -r "./config/$1" -t "$HOME/.config"; }
+  _copy_config()      { cp -r "$_script_dir/config/$1" -t "$HOME/.config"; }
   _copy_sudo()        { sudo cp -r "$1" "$2"; }
   _grant_executable() { chmod +x "$1"; }
 fi
@@ -80,12 +82,13 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
   if [[ "$_debug" == "yes" ]]; then
     printf "[DEBUG] Opened config file in $_editor.\n"
   else
-    eval "$_editor config.ini"
+    eval "$_editor $_script_dir/config.ini"
   fi
 fi
 
-source <(grep = config.ini)
+source <(grep = "$_script_dir/config.ini")
 
+mkdir "$_temp_dir"
 
 # SYSTEM UPDATE
 echo "Performing system update..."
@@ -100,11 +103,10 @@ fi
 echo "Installing Yay..."
 if [[ ! $_debug == "yes" ]]; then
   _instl_pacman git base-devel
-  git clone https://aur.archlinux.org/yay.git
-  cd yay
+  git clone https://aur.archlinux.org/yay.git "$_temp_dir/yay"
+  cd "$_temp_dir/yay"
   makepkg -si
-  cd ..
-  sudo rm -rf yay
+  cd "$_script_dir"
 else
   echo "[DEBUG] Installed Yay"
 fi
@@ -129,7 +131,7 @@ else
   hypr_pack=hyprland
 fi
 _instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
-_instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
+_instl_pacman alacrit  rm -rf tempty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
 
 
 # AUDIO
@@ -203,21 +205,21 @@ else
 
   # Icon Theme
   mkdir temp
-  git clone https://github.com/vinceliuice/Colloid-icon-theme temp/Colloid
+  git clone https://github.com/vinceliuice/Colloid-icon-theme "$_temp_dir/Colloid"
   bash temp/Colloid/install.sh -d "$HOME/.icons"
 
   # Cursor
-  git clone https://github.com/ful1e5/XCursor-pro.git temp/XCursor-Pro
+  git clone https://github.com/ful1e5/XCursor-pro.git "$_temp_dir/XCursor-Pro"
   _instl_pacman yarn
   _instl_yay python-clickgen
-  cd temp/XCursor-Pro && yarn build
-  cp -r "themes/XCursor-Pro-Dark" -t "$HOME/.icons"
-  cp -r themes/XCursor-Pro-Light -t "$HOME/.icons"
-  cp -r themes/XCursor-Pro-Red -t "$HOME/.icons"
-  cd ../..
+
+  cd "$_temp_dir/XCursor-Pro" && yarn build
+  cp -r "$_temp_dir/XCursor-Pro/themes/XCursor-Pro-Dark" -t "$HOME/.icons"
+  cp -r "$_temp_dir/XCursor-Pro/themes/XCursor-Pro-Light" -t "$HOME/.icons"
+  cp -r "$_temp_dir/XCursor-Pro/themes/XCursor-Pro-Red" -t "$HOME/.icons"
+  cd "$_scipt_dir"
 
   _copy_config gtk-3.0
-  rm -rf temp
 fi
 
 
@@ -228,4 +230,4 @@ _copy_config eww
 _copy_config hypr
 _grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
-_copy_sudo ./wallpapers /usr/share
+_copy_sudo "$_script_dir/wallpapers" /usr/share
