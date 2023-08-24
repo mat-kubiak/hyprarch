@@ -7,11 +7,26 @@ _help_page="HyprArch configuration install script.
 \t-d - Debug mode, won't install anything.
 \t-e - Specify the config editor. Either nano (default) or vim.\n"
 
+_red=$'\e[1;31m'
+_grn=$'\e[1;32m'
+_yel=$'\e[1;33m'
+_blu=$'\e[1;34m'
+_mag=$'\e[1;35m'
+_cyn=$'\e[1;36m'
+_end=$'\e[0m'
+
+_print_info()  { printf "%s\n" "${_cyn}[INFO]${_end} $1"; }
+_print_good()  { printf "%s\n" "${_grn}[GOOD]${_end} $1"; }
+_print_debug() { printf "%s\n" "${_mag}[DEBUG]${_end} $1"; }
+_print_warn()  { printf "%s\n" "${_yel}[WARNING]${_end} $1"; }
+_print_error() { printf "%s\n" "${_red}[ERROR]${_end} $1"; }
+
+
 # OPTIONS
 while getopts ':hde:' OPTION; do
   case "$OPTION" in
     :)
-    printf "[ERROR] Unrecognized parameter.\n"
+    _print_error "Unrecognized parameter."
     exit 1
     ;;
     h)
@@ -24,7 +39,7 @@ while getopts ':hde:' OPTION; do
     e)
     _editor="$OPTARG"
     if [[ ! "$_editor" == @(nano|vim) ]]; then
-      printf "[ERROR] Choose either nano or vim as the editor.\n"
+      _print_error "Choose either nano or vim as the editor."
       exit 1
     fi
     ;;
@@ -33,12 +48,12 @@ done
 
 
 if [[ "$_debug" == "yes" ]]; then
-  _instl_pacman()     { echo "[PACMAN] Installed $@"; }
-  _instl_yay()        { echo "[YAY] Installed $@"; }
-  _enable_service()   { echo "[SYSTEMCTL] Enabled $@"; }
-  _copy_config()      { echo "[DEBUG] Copied config from folder $1"; }
-  _copy_sudo()        { echo "[DEBUG] Sudo-copied folder $1 inside $3"; }
-  _grant_executable() { echo "[DEBUG] Granted permission to execute $1"; }
+  _instl_pacman()     { _print_debug "Pacman installed $@."; }
+  _instl_yay()        { _print_debug "Yay installed $@."; }
+  _enable_service()   { _print_debug "Systemd enabled $@."; }
+  _copy_config()      { _print_debug "Copied config from folder $1."; }
+  _copy_sudo()        { _print_debug "Sudo-copied folder $1 inside $3."; }
+  _grant_executable() { _print_debug "Granted permission to execute $1."; }
 else
   _instl_pacman()     { sudo pacman --noconfirm --logfile ./log -S $@; }
   _instl_yay()        { yay --answerclean None --answerdiff None -S $@; }
@@ -51,36 +66,36 @@ fi
 
 # INTERNET
 if [[ ! $_debug == "yes" ]]; then
-  echo "Testing internet connection..."
+  _print_info "Testing internet connection..."
   curl -D- -o /dev/null -s http://www.google.com > /dev/null
   if [[ $? == 0 ]]; then
-    echo "Internet connected."
+    _print_good "Internet connected."
   else
-    echo "Internet not connected! Please try again!"
+    _print_error "Internet not connected! Please try again!"
     exit 1
   fi
 fi
 
 
 # MENU
-echo " "
-echo "Hello! This script will install the whole hyprland ecosystem along with configuration."
-echo "If something goes wrong, look for the log file in the script's directory."
-echo "If you aren't sure what software the script will install and whether you want it, please consult with the README"
+_menu_print="Hello! This script will install the whole hyprland ecosystem along with configuration.
+If something goes wrong, look for the log file in the script's directory.
+If you aren't sure what software the script will install and whether you want it, please consult with the README"
+printf "$_menu_print\n"
 
 read -p "Now, are you sure you want to continue? [y/n] " -n 1 -r
-echo " "
+printf "\n"
 if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-  echo "Script canceled."
+  printf "Script canceled.\n"
   [[ "$0" = "$BASH_SOURCE" ]] && exit 1 || return 1
 fi
 
 read -p "Do you want to configure the script and additional packages? [y/n] " -n 1 -r
-echo " "
+printf "\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   _instl_pacman "$_editor"
   if [[ "$_debug" == "yes" ]]; then
-    printf "[DEBUG] Opened config file in $_editor.\n"
+    _print_debug "Opened config file in $_editor."
   else
     eval "$_editor $_script_dir/config.ini"
   fi
@@ -91,16 +106,16 @@ source <(grep = "$_script_dir/config.ini")
 mkdir "$_temp_dir"
 
 # SYSTEM UPDATE
-echo "Performing system update..."
+_print_info "Performing system update..."
 if [[ ! $_debug == "yes" ]]; then
   sudo pacman -Syu
 else
-  echo "[PACMAN] Updated System"
+  _print_debug "Pacman updated the system."
 fi
 
 
 # YAY
-echo "Installing Yay..."
+_print_info "Installing Yay..."
 if [[ ! $_debug == "yes" ]]; then
   _instl_pacman git base-devel
   git clone https://aur.archlinux.org/yay.git "$_temp_dir/yay"
@@ -108,23 +123,23 @@ if [[ ! $_debug == "yes" ]]; then
   makepkg -si
   cd "$_script_dir"
 else
-  echo "[DEBUG] Installed Yay"
+  _print_debug "Installed Yay."
 fi
 
 
 # GRAPHICAL SERVER
-echo "Installing Wayland with Xorg compatibility..."
+_print_info "Installing Wayland with Xorg compatibility..."
 _instl_pacman wayland wlroots xorg-server xorg-xwayland
 
 
 # DISPLAY MANAGER
-echo "Installing Display Manager..."
+_print_info "Installing Display Manager..."
 _instl_pacman sddm
 _enable_service sddm.service
 
 
 # HYPRLAND
-echo "Installing Desktop Environment..."
+_print_info "Installing Desktop Environment..."
 if [[ $nvidia == "yes" ]]; then
   hypr_pack=hyprland-nvidia-git
 else
@@ -135,7 +150,7 @@ _instl_pacman alacrit  rm -rf tempty wofi dunst polkit-kde-agent xdg-desktop-por
 
 
 # AUDIO
-echo "Installing Audio Server and utilities..."
+_print_info "Installing Audio Server and utilities..."
 _instl_yay pipewire-git pipewire-alsa-git pipewire-jack-git pipewire-pulse-git wireplumber-git
 _instl_pacman qjackctl pavucontrol
 _enable_service --user pipewire.service pipewire-pulse.service
@@ -143,19 +158,19 @@ _enable_service --user pipewire.service pipewire-pulse.service
 
 # BLUETOOTH
 if [[ $install_bluetooth_support == "yes" ]]; then
-  echo "Installing Bluetooth support..."
+  _print_info "Installing Bluetooth support..."
   _instl_pacman bluez bluez-utils blueman
   _enable_service bluetooth.service
 fi
 
 
 # FONTS
-echo "Installing fonts and emoji..."
+_print_info "Installing fonts and emoji..."
 _instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
 
 
 # ADDITIONALS
-echo "Installing additional software..."
+_print_info "Installing additional software..."
 thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-pixbuf-loader thunar-archive-plugin thunar-media-tags-plugin"
 media_pack="viewnior gthumb vlc"
 cli_pack="ranger htop alsa-utils"
@@ -165,9 +180,9 @@ _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
 # STEAM
 if [[ $_debug == "yes" ]]; then
-  echo "[DEBUG] Installed Steam"
+  _print_debug "Installed Steam."
 elif [[ $steam == "yes" ]]; then
-  echo "Installing Steam..."
+  _print_info "Installing Steam..."
   # uncomments the multilib section in /etc/pacman.conf
   sudo sed -zi 's/#\s*\[multilib\]\n#\s*Include = /\[multilib\]\nInclude = /g' /etc/pacman.conf
   _instl_pacman steam
@@ -184,7 +199,7 @@ fi
 
 
 # FROM CONFIG
-echo "Installing additional software from config..."
+_print_info "Installing additional software from config..."
 if [[ -z "$additional_pacman" ]]; then
   _instl_pacman "$additional_pacman"
 fi
@@ -195,9 +210,9 @@ fi
 
 # GTK THEME
 if [[ $_debug == "yes" ]]; then
-  echo "[DEBUG] Installed the GTK theme"
+  _print_debug "Installed the GTK theme."
 else
-  echo "Installing a GTK theme..."
+  _print_info "Installing a GTK theme..."
   mkdir "$HOME/.theme" "$HOME/.icons"
 
   # Global Theme
@@ -224,10 +239,12 @@ fi
 
 
 # DOT FILES
-echo "Copying configuration files..."
+_print_info "Copying configuration files..."
 _copy_config alacritty
 _copy_config eww
 _copy_config hypr
 _grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
 _copy_sudo "$_script_dir/wallpapers" /usr/share
+
+_print_good "Installation successful."
