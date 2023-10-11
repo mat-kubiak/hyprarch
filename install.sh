@@ -129,6 +129,7 @@ _instl_pacman wayland wlroots xorg-server xorg-xwayland
 _print_info "Installing Display Manager..."
 _instl_pacman sddm
 _enable_service sddm.service
+_instl_pacman gst-libav phonon-qt5-gstreamer gst-plugins-good qt5-quickcontrols qt5-graphicaleffects qt5-multimedia
 
 
 # HYPRLAND
@@ -230,6 +231,18 @@ else
   _copy_config gtk-3.0
 fi
 
+# SDDM THEME
+if [[ $_debug == "yes" ]]; then
+  _print_debug "Installed the SDDM theme."
+else
+  _print_info "Installing the SDDM theme..."
+
+  sudo git clone git@github.com:3ximus/aerial-sddm-theme.git /usr/share/sddm/themes
+  sudo mkdir /etc/sddm.conf.d
+
+  sudo cp $_script_dir/config/sddm/ /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/conf.conf
+fi
+
 
 # DOT FILES
 _print_info "Copying configuration files..."
@@ -239,5 +252,7 @@ _copy_config hypr
 _grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
 _copy_sudo "$_script_dir/wallpapers" /usr/share
+
+_copy_sudo "$_script_dir/" /etc/sddm.conf.d
 
 _print_good "Installation successful."
