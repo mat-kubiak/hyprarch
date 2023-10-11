@@ -171,6 +171,9 @@ cli_pack="ranger htop alsa-utils"
 gui_pack="firefox ark gparted nwg-look"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
+power_management="laptop-mode-tools auto-cpufreq"
+_instl_yay $power_management
+
 
 # STEAM
 if [[ $_debug == "yes" ]]; then
