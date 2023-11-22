@@ -4,17 +4,21 @@ _status_path="$HOME/.config/hypr/status.ini"
 _scripts_path="$HOME/.config/hypr/scripts"
 _all_script_names=$(ls "$HOME/.config/hypr/scripts" | grep ".sh" | grep -v "execute.sh" | sed 's/.sh//')
 
-_help_page="Usage: execute-script.sh [OPTIONS] [SCRIPT_NAME]
+_help_page="Usage: execute-script.sh [OPTIONS] SCRIPT_NAME
 Options:
 \t-h - Display help page.
 \t-s - Start, executes scripts without changing their values.
-\t-a - All, execute all scripts. Should be used with -s. Won't need SCRIPT_NAME.
+\t-a - All, execute all scripts. Should be used with -s. Will ignore SCRIPT_NAME.
 \t-r - Reset, resets the status.ini file to default values before executing scripts.
 Scripting:
 Place your script in \$HOME/.config/hypr/scripts and give it a unique name without spaces.
 You should only store persistent data in one variable, if your script name is example.sh, then the variable will have _example name.
 In the status.ini
 \n"
+
+_default_ini="_gamemode=0
+_touchpad=1
+_wallpaper=depth-of-field.jpg"
 
 _toggle_status() {
   if [[ "$_status" == "1" ]]; then
@@ -54,7 +58,7 @@ done
 
 
 if [[ "$_reset" == "1" ]] || [[ ! -e $_status_path ]]; then
-  cp "$_scripts_path/defaults.ini" "$_status_path"
+  echo "$_default_ini" > "$_status_path"
   _start=1
 fi
 source <(grep = "$_status_path")
