@@ -253,6 +253,7 @@ _copy_config alacritty
 _copy_config hypr
 _grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
+_copy_config wofi
 _copy_sudo "$_script_dir/wallpapers" /usr/share
 
 _copy_sudo "$_script_dir/" /etc/sddm.conf.d
