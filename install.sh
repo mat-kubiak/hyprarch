@@ -156,7 +156,9 @@ fi
 
 # FONTS
 _print_info "Installing fonts and emoji..."
-_instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
+_instl_yay ttf-twemoji ttf-jetbrains-mono-nerd noto-fonts-cjk noto-fonts-emoji noto-fonts
+_instl_pacman ttf-caladea ttf-carlito ttf-dejavu ttf-liberation noto-fonts ttf-opensans otf-overpass ttf-roboto tex-gyre-fonts ttf-ubuntu-font-family
+_instl_yay ttf-impallari-cantora ttf-courier-prime ttf-gelasio-ib ttf-merriweather ttf-source-sans-pro-ibx ttf-signika
 
 
 # ADDITIONALS
