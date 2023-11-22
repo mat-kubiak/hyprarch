@@ -87,11 +87,7 @@ read -p "Do you want to configure the script and additional packages? [y/n] " -n
 printf "\n"
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   _instl_pacman "$_editor"
-  if [[ "$_debug" == "yes" ]]; then
-    _print_debug "Opened config file in $_editor."
-  else
-    eval "$_editor $_script_dir/config.ini"
-  fi
+  eval "$_editor $_script_dir/config.ini"
 fi
 
 source <(grep = "$_script_dir/config.ini")
@@ -123,7 +119,7 @@ fi
 # GRAPHICAL SERVER
 _print_info "Installing Wayland with Xorg compatibility..."
 _instl_pacman wayland wlroots xorg-server xorg-xwayland
-
+_instl_yay wdisplays-git
 
 # DISPLAY MANAGER
 _print_info "Installing Display Manager..."
@@ -140,7 +136,7 @@ else
   hypr_pack=hyprland
 fi
 _instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
-_instl_pacman alacrit  rm -rf tempty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
+_instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
 
 
 # AUDIO
@@ -167,7 +163,7 @@ _instl_yay ttf-twemoji ttf-jetbrains-mono-nerd
 _print_info "Installing additional software..."
 thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-pixbuf-loader thunar-archive-plugin thunar-media-tags-plugin"
 media_pack="viewnior gthumb vlc"
-cli_pack="ranger htop alsa-utils"
+cli_pack="neofetch ranger htop alsa-utils"
 gui_pack="firefox ark gparted nwg-look"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 
@@ -258,4 +254,6 @@ _copy_sudo "$_script_dir/wallpapers" /usr/share
 
 _copy_sudo "$_script_dir/" /etc/sddm.conf.d
 
-_print_good "Installation successful."
+_print_good "Installation successful. Enjoy your new System!"
+echo ''
+neofetch
