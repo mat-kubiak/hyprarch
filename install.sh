@@ -250,7 +250,6 @@ fi
 # DOT FILES
 _print_info "Copying configuration files..."
 _copy_config alacritty
-_copy_config eww
 _copy_config hypr
 _grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
