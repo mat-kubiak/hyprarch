@@ -9,7 +9,12 @@ Options:
 \t-h - Display help page.
 \t-s - Start, executes scripts without changing their values.
 \t-a - All, execute all scripts. Should be used with -s. Won't need SCRIPT_NAME.
-\t-r - Reset, resets the status.ini file to default values before executing scripts.\n"
+\t-r - Reset, resets the status.ini file to default values before executing scripts.
+Scripting:
+Place your script in \$HOME/.config/hypr/scripts and give it a unique name without spaces.
+You should only store persistent data in one variable, if your script name is example.sh, then the variable will have _example name.
+In the status.ini
+\n"
 
 _toggle_status() {
   if [[ "$_status" == "1" ]]; then
