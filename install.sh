@@ -15,6 +15,11 @@ _print_debug() { printf "%s\n" "${_mag}[DEBUG]${_wht} $1"; }
 _print_warn()  { printf "%s\n" "${_yel}[WARNING]${_wht} $1"; }
 _print_error() { printf "%s\n" "${_red}[ERROR]${_wht} $1"; }
 
+
+# DEFAULTS
+_debug=no
+_editor=nano
+
 # OPTIONS
 while getopts ':hde:' OPTION; do
   case "$OPTION" in
@@ -106,13 +111,13 @@ fi
 # YAY
 _print_info "Installing Yay..."
 if [[ ! $_debug == "yes" ]]; then
-  _instl_pacman git base-devel
-  git clone https://aur.archlinux.org/yay.git "$_temp_dir/yay"
-  cd "$_temp_dir/yay"
-  makepkg -si
-  cd "$_script_dir"
+ _instl_pacman git base-devel
+ git clone https://aur.archlinux.org/yay.git "$_temp_dir/yay"
+ cd "$_temp_dir/yay"
+ makepkg -si
+ cd "$_script_dir"
 else
-  _print_debug "Installed Yay."
+ _print_debug "Installed Yay."
 fi
 
 
@@ -135,8 +140,9 @@ if [[ $nvidia == "yes" ]]; then
 else
   hypr_pack=hyprland
 fi
-_instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot
-_instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist hyprpicker
+_instl_yay $hypr_pack waybar-hyprland-git swww-git grimshot hyprpicker-git
+_instl_pacman alacritty wofi dunst polkit-kde-agent xdg-desktop-portal-hyprland cliphist
+
 
 
 # AUDIO
@@ -166,8 +172,9 @@ _print_info "Installing additional software..."
 thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-pixbuf-loader thunar-archive-plugin thunar-media-tags-plugin"
 media_pack="viewnior gthumb vlc"
 cli_pack="neofetch ranger htop alsa-utils"
-gui_pack="firefox ark gparted nwg-look"
+gui_pack="firefox ark gparted"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
+_instl_yay nwg-look-bin
 
 power_management="laptop-mode-tools auto-cpufreq"
 _instl_yay $power_management
@@ -211,7 +218,7 @@ else
   mkdir "$HOME/.theme" "$HOME/.icons"
 
   # Global Theme
-  git clone https://github.com/EliverLara/Kripton.git "$HOME/.theme"
+  sudo git clone https://github.com/EliverLara/Kripton.git "/usr/share/themes/Kripton"
 
   # Icon Theme
   mkdir temp
@@ -238,10 +245,8 @@ if [[ $_debug == "yes" ]]; then
 else
   _print_info "Installing the SDDM theme..."
 
-  sudo git clone git@github.com:3ximus/aerial-sddm-theme.git /usr/share/sddm/themes
+  sudo git clone https://github.com/3ximus/aerial-sddm-theme /usr/share/sddm/themes/aerial
   sudo mkdir /etc/sddm.conf.d
-
-  sudo cp $_script_dir/config/sddm/ /usr/lib/sddm/sddm.conf.d/default.conf /etc/sddm.conf.d/conf.conf
 fi
 
 
@@ -254,7 +259,7 @@ _copy_config waybar
 _copy_config wofi
 _copy_sudo "$_script_dir/wallpapers" /usr/share
 
-_copy_sudo "$_script_dir/" /etc/sddm.conf.d
+_copy_sudo "$_script_dir/config/sddm/" "/etc/sddm.conf.d/"
 
 _print_good "Installation successful. Enjoy your new System!"
 echo ''
