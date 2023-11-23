@@ -46,16 +46,23 @@ window#waybar {
   padding-left: 15px;
   padding-right: 15px;
   padding-top: 1px;
+  padding-bottom: 2px;
 }
 
 #workspaces {
   margin-left: 5px;
+  padding-bottom: 0px;
 }
 
 #clock {
   margin-right: 5px;
 }
 
+#tray {
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 30px;
+}
 
 /* CONNECTED */
 
@@ -85,15 +92,6 @@ window#waybar {
   border-bottom-left-radius: 0px;
 }
 
-
-/* doesn't work somehow */
-
-#window.empty {
-  background-color: red;
-}
-
-#tray {
-  margin-left: 5px;
-  margin-right: 10px;
-  font-size: 30px;
+#backlight {
+  padding-left: 1px;
 }
