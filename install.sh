@@ -258,9 +258,15 @@ _grant_executable "$HOME/.config/hypr/execute-script.sh"
 _copy_config waybar
 _copy_config wofi
 _copy_sudo "$_script_dir/wallpapers" /usr/share
-
 _copy_sudo "$_script_dir/config/sddm/" "/etc/sddm.conf.d/"
 
+
+_print_info "Configuring user home directory..."
+if [[ ! $_debug == "yes" ]]; then
+  xdg-user-dirs-update
+fi
+
+
 _print_good "Installation successful. Enjoy your new System!"
-echo ''
+echo ""
 neofetch
