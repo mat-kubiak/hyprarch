@@ -173,6 +173,7 @@ thunar_pack="thunar gvfs thunar-volman gvfs-mtp tumbler ffmpegthumbnailer webp-p
 media_pack="viewnior gthumb vlc"
 cli_pack="neofetch ranger htop alsa-utils"
 gui_pack="firefox ark gparted"
+network_pack="network-manager-applet openvpn networkmanager-openvpn"
 _instl_pacman $thunar_pack $media_pack $cli_pack $gui_pack
 _instl_yay nwg-look-bin
 
