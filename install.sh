@@ -260,7 +260,7 @@ _copy_config waybar
 _copy_config wofi
 _copy_sudo "$_script_dir/wallpapers" /usr/share
 _copy_sudo "$_script_dir/config/sddm/" "/etc/sddm.conf.d/"
-
+_copy_sudo "$_script_dir/config/dunst/dunstrc" "/etc/dunst/dunstrc"
 
 _print_info "Configuring user home directory..."
 if [[ ! $_debug == "yes" ]]; then
