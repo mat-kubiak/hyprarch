@@ -1,4 +1,6 @@
 import argparse
+import requests
+import platform
 
 def message(mode: str, message: str):
     headers = {
@@ -10,6 +12,13 @@ def message(mode: str, message: str):
     }
     print(headers[mode] + ' ' + message)
 
+def has_internet_access():
+    try:
+        response = requests.get("https://google.com", timeout=5)
+        return True
+    except requests.ConnectionError:
+        return False
+
 def parse_cli():
     parser = argparse.ArgumentParser(
         prog='hyprarch',
@@ -20,15 +29,41 @@ def parse_cli():
     args = parser.parse_args()
     if args.editor != 'nano' and args.editor != 'vim':
         parser.error('-e/--editor argument can be either nano or vim!')
-        exit
+        exit(1)
     return args
 
 def main():
     args = parse_cli()
-    message('good', 'Hello World!')
+    
+    # PLATFORM CHECK
+    if platform.system() != 'Linux':
+        message('error', 'This script will only work for Linux! Detected os: ' + platform.system())
+        exit(1)
+    
+    # DISTRO CHECK
+    distro = platform.freedesktop_os_release()["ID"]
+    if distro != 'arch':
+        message('error', 'This script will only work for Arch! Detected distribution: ' + distro)
+        exit(1)
+
+    # INTERNET CHECK
+    message('info', 'Checking internet connection...')
+    if not has_internet_access():
+        message('error', 'Internet not connected!')
+        exit(1)
+    message('good', 'Internet connected!')
+
+    # WELCOME
+    print('')
+    message('info', 'Hello! This script will install the whole Hyprland ecosystem along with software specified in config.ini.')
+    message('info', 'If something goes wrong, look for the log file in the script\'s directory.')
+    message('warn', 'If you aren\'t sure what software the script will install and whether you want it, please consult with the README')
+    if input("Do you want to continue? (y/n) ") != 'y':
+        exit()
+
+    message('info', 'rest of the program')
 
 if __name__ == '__main__':
     main()
 else:
     print('This isn\'t supposed to be a module!')
-    exit
