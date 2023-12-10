@@ -2,6 +2,8 @@ import argparse
 import requests
 import platform
 import os
+import subprocess
+import configparser
 
 class paths:
     installer_dir = os.path.dirname(os.path.realpath(__file__))
@@ -9,8 +11,8 @@ class paths:
     wallpaper_dir = os.path.join(installer_dir, 'wallpapers')
     temp_dir = os.path.join(installer_dir, 'temp')
 
-    config_file = os.path.join(config_dir, 'config.ini')
-    log_file = os.path.join(config_dir, 'log')
+    config_file = os.path.join(installer_dir, 'config.ini')
+    log_file = os.path.join(installer_dir, 'log')
 
 def message(mode: str, mes: str):
     headers = {
@@ -70,6 +72,19 @@ def main():
     message('warning', 'If you aren\'t sure what software the script will install and whether you want it, please consult with the README')
     if input("Do you want to continue? (y/n) ") != 'y':
         exit()
+
+    # EDIT CONFIG FILE
+    # TODO: check if the editor is present
+    if input("Do you want to edit the configuration file? (y/n) ") == 'y':
+        subprocess.call([args.editor, paths.config_file])
+    
+    # LOAD CONFIG FILE
+    config = configparser.ConfigParser()
+    config.read(paths.config_file)
+
+    # INSTALL GROUPS OF SOFTWARE
+    # MOVE CONFIG FILES
+    # END
 
     message('info', 'rest of the program')
 
