@@ -1,6 +1,16 @@
 import argparse
 import requests
 import platform
+import os
+
+class paths:
+    installer_dir = os.path.dirname(os.path.realpath(__file__))
+    config_dir = os.path.join(installer_dir, 'config')
+    wallpaper_dir = os.path.join(installer_dir, 'wallpapers')
+    temp_dir = os.path.join(installer_dir, 'temp')
+
+    config_file = os.path.join(config_dir, 'config.ini')
+    log_file = os.path.join(config_dir, 'log')
 
 def message(mode: str, message: str):
     headers = {
