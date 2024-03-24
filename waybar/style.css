@@ -1,0 +1,96 @@
+/* GENERAL */
+
+* {
+  padding: 0;
+  margin: 0;
+  font-size: 14px;
+  font-family: 'NotoSansMono Nerd Font';
+  color: rgb(192, 192, 192);
+}
+
+window#waybar {
+  background: rgba(0, 0, 0, 0);
+}
+
+#workspaces button {
+  font-family: 'JetBrains Mono Nerd Font';
+  font-size: 15px;
+  font-weight: bold;
+}
+
+/* MODULES */
+
+#workspaces,
+#cpu,
+#memory,
+#temperature,
+#battery,
+#window_status,
+#window,
+#network,
+#pulseaudio,
+#backlight,
+#clock {
+  font-family: 'JetBrains Mono Nerd Font';
+  font-size: 15px;
+  font-weight: bold;
+
+  border-radius: 30px;
+  background-color: rgba(24, 27, 32, 0.8);
+
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-right: 5px;
+
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 1px;
+  padding-bottom: 2px;
+}
+
+#workspaces {
+  margin-left: 5px;
+  padding-bottom: 0px;
+}
+
+#clock {
+  margin-right: 5px;
+}
+
+#tray {
+  margin-left: 5px;
+  margin-right: 10px;
+  font-size: 30px;
+}
+
+/* MODULE GROUPS */
+
+#cpu, #memory, #temperature, #pulseaudio { /* middle */
+  margin-right: 0px;
+  padding-right: 5px;
+  border-right: none;
+}
+
+#memory, #temperature, #battery, #backlight { /*  */
+  margin-left: 0px;
+  padding-left: 5px;
+  border-left: none;
+}
+
+#cpu, #pulseaudio { /* left end */
+  border-top-right-radius: 0px;
+  border-bottom-right-radius: 0px;
+}
+
+#memory, #temperature { /* middle */
+  border-radius: 0px;
+}
+
+#battery, #backlight { /* right end */
+  border-top-left-radius: 0px;
+  border-bottom-left-radius: 0px;
+}
+
+#backlight {
+  padding-left: 1px;
+}
